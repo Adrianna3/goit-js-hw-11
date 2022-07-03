@@ -1,9 +1,5 @@
 import { fetchPhoto } from './fetchPhoto';
 import { Notify } from 'notiflix';
-import SimpleLightbox from 'simplelightbox';
-import 'simplelightbox/dist/simple-lightbox.min.css';
-
-let lightBox = new SimpleLightbox('.gallery a');
 
 
 const searchForm = document.querySelector('#search-form');
@@ -45,9 +41,10 @@ const renderSearchPhotos = async () => {
   } catch (error) {
     if (searchQuery.value.trim() !== '') {
       console.log(error.message);
-      console.log('Something WRONG 0_o !?!');
     } else {
-      Notify.failure('Empty search query. Please enter required images');
+      Notify.failure(
+        'Sorry, there are no images matching your search query. Please try again.'
+      );
       gallery.innerHTML = '';
     }
   }
@@ -67,9 +64,9 @@ function checkEndOfHits() {
 }
 
 
-function renderPhotoListItems(hits, wrapper, page) {
+function renderPhotoListItems(photos, wrapper, page) {
  
-  const markup = hits
+  const markup = photos
     .map(
       ({
         largeImageURL,
@@ -111,18 +108,6 @@ function renderPhotoListItems(hits, wrapper, page) {
     )
     .join('');
   wrapper.insertAdjacentHTML('beforeend', markup);
-
-  lightBox.refresh(); 
-  if (page >= 2) {
-    const { height: cardHeight } = document
-      .querySelector('.gallery')
-      .firstElementChild.getBoundingClientRect();
-
-    window.scrollBy({
-      top: cardHeight * 2,
-      behavior: 'smooth',
-    });
-  }
 }
 
 
